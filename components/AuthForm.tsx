@@ -32,7 +32,7 @@ const signUpSchema = z.object({
   password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
 });
 
-const loginSchema = z.object({
+const SignInSchema = z.object({
   email: z.string().email({ message: 'Invalid email address.' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
 });
@@ -44,7 +44,7 @@ interface AuthFormProps {
 
 const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
   const form = useForm({
-    resolver: zodResolver(type === 'sign-up' ? signUpSchema : loginSchema),
+    resolver: zodResolver(type === 'sign-up' ? signUpSchema : SignInSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
@@ -65,21 +65,21 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
   return (
     <section className="auth-form">
       <header className="flex flex-col gap-5">
-        <Link href='/' className='cursor-pointer flex items-center gap-1'>
-            <Image 
-                src='/icons/logo.svg'
-                width={34}
-                height={34}
-                alt='Horizon logo'
-            />
-            <h1 className='text-26 font-ibm-plex-serif font-bold text-black-1'>Horizon</h1>
+        <Link href="/" className="cursor-pointer flex items-center gap-1">
+          <Image 
+            src="/icons/logo.svg"
+            width={34}
+            height={34}
+            alt="Horizon logo"
+          />
+          <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">Horizon</h1>
         </Link>
-        <h2 className="text-2xl font-bold">{type === 'sign-up' ? 'Sign up' : 'Log in'}</h2>
-        </header>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {type === 'sign-up' && (
-              <>
+        <h2 className="text-2xl font-bold">{type === 'sign-up' ? 'Sign up' : 'Sign in'}</h2>
+      </header>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          {type === 'sign-up' && (
+            <>
               <div className="flex space-x-4">
                 <FormField control={form.control} name="firstName" render={({ field }) => (
                   <FormItem>
@@ -87,7 +87,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className='form-message'/>
                   </FormItem>
                 )} />
                 <FormField control={form.control} name="lastName" render={({ field }) => (
@@ -96,96 +96,92 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className='form-message'/>
                   </FormItem>
                 )} />
               </div>
-                <FormField control={form.control} name="address" render={({ field }) => (
+              <FormField control={form.control} name="address" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage className='form-message'/>
+                </FormItem>
+              )} />
+              <div className="flex space-x-4">
+                <FormField control={form.control} name="state" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Address</FormLabel>
+                    <FormLabel>State</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className='form-message'/>
                   </FormItem>
                 )} />
-                <div className="flex space-x-4">
-                  <FormField control={form.control} name="state" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>State</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                  <FormField control={form.control} name="postalCode" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Postal Code</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                </div>
-                <div className="flex space-x-4">
-                    <FormField control={form.control} name="dob" render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Date of Birth</FormLabel>
-                        <FormControl>
-                        <Input type="date" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                    )} />
-                    <FormField control={form.control} name="ssn" render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>SSN</FormLabel>
-                        <FormControl>
-                        <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                    )} />
-                </div>
-              </>
-            )}
-            <FormField control={form.control} name="email" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
-            <FormField control={form.control} name="password" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input type="password" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
-            <Button type="submit" className="form-btn w-full">
-              {type === 'sign-up' ? 'Sign up' : 'Log in'}
-            </Button>
-          </form>
-        </Form>
-
-        <footer className="flex justify-center gap-1">
-            <p className="text-14 font-normal text-gray-600">
-              {type === 'sign-in'
-              ? "Don't have an account?"
-              : "Already have an account?"}
-            </p>
-            <Link href={type === 'sign-in' ? '/sign-up' : '/sign-in'} className="form-link">
-              {type === 'sign-in' ? 'Sign up' : 'Sign in'}
-            </Link>
-        </footer>
-      
+                <FormField control={form.control} name="postalCode" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Postal Code</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage className='form-message'/>
+                  </FormItem>
+                )} />
+              </div>
+              <div className="flex space-x-4">
+                <FormField control={form.control} name="dob" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date of Birth</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage className='form-message'/>
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="ssn" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>SSN</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage className='form-message'/>
+                  </FormItem>
+                )} />
+              </div>
+            </>
+          )}
+          <FormField control={form.control} name="email" render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input type="email" {...field} />
+              </FormControl>
+              <FormMessage className='form-message'/>
+            </FormItem>
+          )} />
+          <FormField control={form.control} name="password" render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage className='form-message'/>
+            </FormItem>
+          )} />
+          <Button type="submit" className="form-btn w-full">
+            {type === 'sign-up' ? 'Sign up' : 'Sign in'}
+          </Button>
+        </form>
+      </Form>
+      <footer className="flex justify-center gap-1">
+        <p className="text-14 font-normal text-gray-600">
+          {type === 'sign-in' ? "Don't have an account?" : "Already have an account?"}
+        </p>
+        <Link href={type === 'sign-in' ? '/sign-up' : '/sign-in'} className="form-link">
+          {type === 'sign-in' ? 'Sign up' : 'Sign in'}
+        </Link>
+      </footer>
     </section>
   );
 };
